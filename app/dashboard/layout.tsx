@@ -31,7 +31,6 @@ type User = {
 const sidebarLinks = [
   { name: "Overview", href: "/dashboard", icon: Home01Icon },
   { name: "My Donations", href: "/dashboard/donations", icon: CreditCardIcon },
-  { name: "Impact Report", href: "/dashboard/impact", icon: ChartLineData01Icon },
   { name: "History", href: "/dashboard/history", icon: Clock01Icon },
   { name: "Profile", href: "/dashboard/profile", icon: UserIcon },
   { name: "Settings", href: "/dashboard/settings", icon: Settings01Icon },

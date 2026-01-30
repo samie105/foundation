@@ -12,25 +12,25 @@ import { HugeiconsIcon } from "@hugeicons/react"
 const stats = [
   {
     icon: UserMultiple02Icon,
-    value: 300,
+    value: 90,
     suffix: "+",
     label: "Team Members",
   },
   {
     icon: Comment01Icon,
-    value: 500,
+    value: 150,
     suffix: "+",
     label: "Client's Review",
   },
   {
     icon: Award01Icon,
-    value: 99,
+    value: 30,
     suffix: "+",
     label: "Winning Awards",
   },
   {
     icon: SmileIcon,
-    value: 800,
+    value: 240,
     suffix: "+",
     label: "Happy Clients",
   },

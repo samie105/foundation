@@ -5,9 +5,9 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Button } from "@/components/ui/button"
 
 const stats = [
-  { value: "15K+", label: "Lives Changed" },
-  { value: "$2.5M", label: "Funds Raised" },
-  { value: "50+", label: "Communities" },
+  { value: "1.4K+", label: "Lives Changed" },
+  { value: "$225K", label: "Funds Raised" },
+  { value: "5+", label: "Communities" },
   { value: "98%", label: "To Programs" },
 ]
 

@@ -27,9 +27,9 @@ const causes = [
     name: "Education for Children", 
     description: "Help provide quality education to underprivileged children",
     image: "/assets/asian-beautiful-boy-charity-cheerful-child-childhood-children-color-cute-dress-education-emotion_t20_b6GeGV.jpg",
-    raised: 45000,
-    goal: 75000,
-    donors: 342,
+    raised: 4050,
+    goal: 6750,
+    donors: 31,
     category: "Education"
   },
   { 
@@ -37,9 +37,9 @@ const causes = [
     name: "Food & Shelter", 
     description: "Provide meals and safe housing for homeless families",
     image: "/assets/image-of-man-child-covered-in-a-blanket.png",
-    raised: 28500,
-    goal: 50000,
-    donors: 215,
+    raised: 2565,
+    goal: 4500,
+    donors: 20,
     category: "Basic Needs"
   },
   { 
@@ -47,9 +47,9 @@ const causes = [
     name: "Healthcare Support", 
     description: "Fund medical treatments for those who can't afford it",
     image: "/assets/women-breast-cancer-support-charity-concept.jpg",
-    raised: 62000,
-    goal: 100000,
-    donors: 489,
+    raised: 5580,
+    goal: 9000,
+    donors: 44,
     category: "Healthcare"
   },
   { 
@@ -57,9 +57,9 @@ const causes = [
     name: "Clean Water Initiative", 
     description: "Build wells and water systems in rural communities",
     image: "/assets/diverse-team-of-volunteers.jpg",
-    raised: 35000,
-    goal: 60000,
-    donors: 278,
+    raised: 3150,
+    goal: 5400,
+    donors: 25,
     category: "Environment"
   },
   { 
@@ -67,9 +67,9 @@ const causes = [
     name: "Women Empowerment", 
     description: "Support women through education and micro-financing",
     image: "/assets/women-breast-cancer-support-charity-concept.jpg",
-    raised: 18500,
-    goal: 40000,
-    donors: 156,
+    raised: 1665,
+    goal: 3600,
+    donors: 14,
     category: "Social"
   },
   { 
@@ -77,9 +77,9 @@ const causes = [
     name: "Emergency Relief Fund", 
     description: "Rapid response for disasters and emergencies",
     image: "/assets/diverse-team-of-volunteers.jpg",
-    raised: 52000,
-    goal: 80000,
-    donors: 623,
+    raised: 4680,
+    goal: 7200,
+    donors: 56,
     category: "Emergency"
   },
   { 
@@ -87,9 +87,9 @@ const causes = [
     name: "Elderly Care Program", 
     description: "Provide care and companionship for senior citizens",
     image: "/assets/diverse-team-of-volunteers.jpg",
-    raised: 22000,
-    goal: 45000,
-    donors: 189,
+    raised: 1980,
+    goal: 4050,
+    donors: 17,
     category: "Healthcare"
   },
   { 
@@ -97,9 +97,9 @@ const causes = [
     name: "Where Most Needed", 
     description: "Let us allocate your donation where it's needed most",
     image: "/assets/diverse-team-of-volunteers.jpg",
-    raised: 125000,
-    goal: 200000,
-    donors: 1250,
+    raised: 11250,
+    goal: 18000,
+    donors: 113,
     category: "General"
   },
 ]

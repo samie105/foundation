@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 const statsCards = [
   {
     title: "Total Donated",
-    value: "$2,450",
+    value: "$221",
     change: "+12.5%",
     changeType: "positive" as const,
     icon: CreditCardIcon,
@@ -28,33 +28,13 @@ const statsCards = [
     changeType: "positive" as const,
     icon: FavouriteIcon,
   },
-  {
-    title: "Impact Score",
-    value: "94",
-    change: "+5 points",
-    changeType: "positive" as const,
-    icon: ChartLineData02Icon,
-  },
-  {
-    title: "Next Donation",
-    value: "Jan 25",
-    change: "Recurring",
-    changeType: "neutral" as const,
-    icon: CalendarCheckOut01Icon,
-  },
 ]
 
 const recentDonations = [
-  { id: 1, cause: "Education for Children", amount: 150, date: "Jan 15, 2026", status: "completed" },
-  { id: 2, cause: "Food & Shelter", amount: 75, date: "Jan 10, 2026", status: "completed" },
-  { id: 3, cause: "Healthcare Support", amount: 200, date: "Jan 5, 2026", status: "completed" },
-  { id: 4, cause: "Clean Water Initiative", amount: 100, date: "Dec 28, 2025", status: "completed" },
-]
-
-const impactHighlights = [
-  { label: "Children Educated", value: "12" },
-  { label: "Meals Provided", value: "450" },
-  { label: "Medical Checkups", value: "23" },
+  { id: 1, cause: "Education for Children", amount: 14, date: "Jan 15, 2026", status: "completed" },
+  { id: 2, cause: "Food & Shelter", amount: 7, date: "Jan 10, 2026", status: "completed" },
+  { id: 3, cause: "Healthcare Support", amount: 18, date: "Jan 5, 2026", status: "completed" },
+  { id: 4, cause: "Clean Water Initiative", amount: 9, date: "Dec 28, 2025", status: "completed" },
 ]
 
 export default function DashboardPage() {
@@ -96,9 +76,9 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6">
         {/* Recent Donations */}
-        <Card className="border-0 shadow-sm ring-1 ring-border/50 lg:col-span-2">
+        <Card className="border-0 shadow-sm ring-1 ring-border/50">
           <CardHeader className="flex-row items-center justify-between">
             <div>
               <CardTitle>Recent Donations</CardTitle>
@@ -136,37 +116,6 @@ export default function DashboardPage() {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Impact Summary */}
-        <Card className="border-0 shadow-sm ring-1 ring-border/50">
-          <CardHeader>
-            <CardTitle>Your Impact</CardTitle>
-            <CardDescription>Lives you&apos;ve touched this year</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {impactHighlights.map((item, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">{item.label}</span>
-                <span className="text-2xl font-bold text-primary">{item.value}</span>
-              </div>
-            ))}
-
-            <div className="rounded-xl bg-primary/5 p-4">
-              <p className="text-sm text-muted-foreground">
-                Your generosity has directly impacted{" "}
-                <span className="font-semibold text-primary">485+ lives</span> through our various
-                programs. Thank you for making a difference!
-              </p>
-            </div>
-
-            <Link href="/dashboard/impact" className="block">
-              <Button variant="outline" className="w-full gap-2">
-                View Full Report
-                <HugeiconsIcon icon={ArrowRight01Icon} className="h-4 w-4" />
-              </Button>
-            </Link>
           </CardContent>
         </Card>
       </div>

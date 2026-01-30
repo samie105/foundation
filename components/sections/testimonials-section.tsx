@@ -80,7 +80,7 @@ export function TestimonialsSection() {
           {/* Stats */}
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="text-4xl font-bold text-foreground">999+</p>
+              <p className="text-4xl font-bold text-foreground">300+</p>
               <p className="text-sm text-muted-foreground">Active Reviews</p>
             </div>
             <div className="flex -space-x-3">
