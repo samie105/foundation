@@ -11,6 +11,7 @@ import {
   CreditCardIcon,
   Menu01Icon,
   Cancel01Icon,
+  MoneyReceiveSquareIcon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Button } from "@/components/ui/button"
@@ -20,6 +21,7 @@ import { cn } from "@/lib/utils"
 
 const sidebarLinks = [
   { name: "Users", href: "/admin/dashboard", icon: UserMultiple02Icon },
+  { name: "Donations", href: "/admin/dashboard/donations", icon: MoneyReceiveSquareIcon },
   { name: "Payment Methods", href: "/admin/dashboard/payments", icon: CreditCardIcon },
   { name: "Settings", href: "/admin/dashboard/settings", icon: Settings01Icon },
 ]

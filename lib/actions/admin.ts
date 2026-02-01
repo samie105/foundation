@@ -16,7 +16,7 @@ export async function getAdminUsers() {
     }
 
     await dbConnect()
-    const users = await User.find({ adminId }).select("-password").sort({ createdAt: -1 })
+    const users = await User.find({ adminId }).select("-password").sort({ createdAt: -1 }).lean()
 
     return { 
       success: true, 
@@ -27,8 +27,12 @@ export async function getAdminUsers() {
         phone: user.phone,
         address: user.address,
         avatar: user.avatar,
-        donations: user.donations,
-        createdAt: user.createdAt,
+        donations: user.donations?.map((d: any) => ({
+          ...d,
+          _id: d._id?.toString(),
+          createdAt: d.createdAt instanceof Date ? d.createdAt.toISOString() : d.createdAt,
+        })),
+        createdAt: user.createdAt instanceof Date ? user.createdAt.toISOString() : user.createdAt,
       }))
     }
   } catch (error) {
@@ -226,13 +230,20 @@ export async function getUserDonations(userId?: string) {
     }
 
     await dbConnect()
-    const user = await User.findById(sessionUserId).select("donations")
+    const user = await User.findById(sessionUserId).select("donations").lean()
 
     if (!user) {
       return { success: false, error: "User not found" }
     }
 
-    return { success: true, donations: user.donations }
+    return { 
+      success: true, 
+      donations: user.donations?.map((d: any) => ({
+        ...d,
+        _id: d._id?.toString(),
+        createdAt: d.createdAt instanceof Date ? d.createdAt.toISOString() : d.createdAt,
+      })) || []
+    }
   } catch (error) {
     console.error("Get donations error:", error)
     return { success: false, error: "Failed to fetch donations" }
@@ -259,5 +270,56 @@ export async function createAdmin(username: string, password: string) {
   } catch (error) {
     console.error("Create admin error:", error)
     return { success: false, error: "Failed to create admin" }
+  }
+}
+
+// Update admin credentials
+export async function updateAdminCredentials(data: {
+  username: string
+  currentPassword?: string
+  newPassword?: string
+}) {
+  try {
+    const cookieStore = await cookies()
+    const adminId = cookieStore.get("adminId")?.value
+
+    if (!adminId) {
+      return { success: false, error: "Not authenticated" }
+    }
+
+    await dbConnect()
+    const admin = await Admin.findById(adminId)
+
+    if (!admin) {
+      return { success: false, error: "Admin not found" }
+    }
+
+    // If changing password, verify current password
+    if (data.newPassword) {
+      if (!data.currentPassword) {
+        return { success: false, error: "Current password is required" }
+      }
+      if (admin.password !== data.currentPassword) {
+        return { success: false, error: "Current password is incorrect" }
+      }
+      admin.password = data.newPassword
+    }
+
+    // Update username
+    if (data.username && data.username !== admin.username) {
+      // Check if username is already taken
+      const existingAdmin = await Admin.findOne({ username: data.username })
+      if (existingAdmin) {
+        return { success: false, error: "Username already taken" }
+      }
+      admin.username = data.username
+    }
+
+    await admin.save()
+
+    return { success: true }
+  } catch (error) {
+    console.error("Update admin credentials error:", error)
+    return { success: false, error: "Failed to update credentials" }
   }
 }

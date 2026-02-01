@@ -168,11 +168,20 @@ export async function getUserSession() {
     }
 
     await dbConnect()
-    const user = await User.findById(userId).select("-password").populate("adminId", "paymentMethods")
+    const user = await User.findById(userId).select("-password").populate("adminId", "paymentMethods").lean()
 
     if (!user) {
       return null
     }
+
+    // Handle adminId which can be either ObjectId or populated object
+    const adminId = user.adminId as any
+    const adminData = typeof adminId === 'object' && adminId !== null && '_id' in adminId
+      ? { 
+          id: adminId._id.toString(), 
+          paymentMethods: adminId.paymentMethods 
+        }
+      : adminId?.toString()
 
     return {
       id: user._id.toString(),
@@ -182,8 +191,12 @@ export async function getUserSession() {
       address: user.address,
       bio: user.bio,
       avatar: user.avatar,
-      adminId: user.adminId,
-      donations: user.donations,
+      adminId: adminData,
+      donations: user.donations?.map((d: any) => ({
+        ...d,
+        _id: d._id?.toString(),
+        createdAt: d.createdAt instanceof Date ? d.createdAt.toISOString() : d.createdAt,
+      })) || [],
     }
   } catch (error) {
     console.error("Get user session error:", error)
@@ -211,13 +224,25 @@ export async function updateUserProfile(data: {
       userId,
       { $set: data },
       { new: true }
-    ).select("-password")
+    ).select("-password").lean()
 
     if (!user) {
       return { success: false, error: "User not found" }
     }
 
-    return { success: true, user }
+    return { 
+      success: true, 
+      user: {
+        ...user,
+        _id: user._id.toString(),
+        adminId: user.adminId?.toString(),
+        donations: user.donations?.map((d: any) => ({
+          ...d,
+          _id: d._id?.toString(),
+          createdAt: d.createdAt instanceof Date ? d.createdAt.toISOString() : d.createdAt,
+        })),
+      }
+    }
   } catch (error) {
     console.error("Update profile error:", error)
     return { success: false, error: "Update failed" }

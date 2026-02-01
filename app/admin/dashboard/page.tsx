@@ -22,7 +22,7 @@ interface User {
   address?: string
   avatar?: string
   donations: IDonation[]
-  createdAt: Date
+  createdAt: Date | string
 }
 
 export default function AdminUsersPage() {
