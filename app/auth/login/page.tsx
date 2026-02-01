@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import {
   FavouriteIcon,
   Mail01Icon,
@@ -13,11 +13,15 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Button } from "@/components/ui/button"
+import { loginUser } from "@/lib/actions/auth"
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get("redirect") || "/dashboard"
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -26,20 +30,17 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError("")
     
-    // Simulate authentication
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    const result = await loginUser(formData.email, formData.password)
     
-    // Store mock user session
-    localStorage.setItem("user", JSON.stringify({
-      id: "1",
-      name: "John Doe",
-      email: formData.email,
-      avatar: "/assets/team-members/Douglas-DeCosta.png"
-    }))
+    if (result.success) {
+      router.push(redirect)
+    } else {
+      setError(result.error || "Invalid credentials")
+    }
     
     setIsLoading(false)
-    router.push("/dashboard")
   }
 
   return (
@@ -68,6 +69,12 @@ export default function LoginPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4 p-6">
+            {error && (
+              <div className="rounded-lg bg-destructive/10 p-3 text-center text-sm text-destructive">
+                {error}
+              </div>
+            )}
+            
             {/* Email */}
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium text-foreground">
@@ -213,5 +220,17 @@ export default function LoginPage() {
         </div>
       </div>
     </section>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }

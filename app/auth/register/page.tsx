@@ -14,11 +14,13 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Button } from "@/components/ui/button"
+import { registerUser } from "@/lib/actions/auth"
 
 export default function RegisterPage() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,27 +30,28 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError("")
     
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match")
+      setError("Passwords do not match")
       return
     }
     
     setIsLoading(true)
     
-    // Simulate registration
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    
-    // Store mock user session
-    localStorage.setItem("user", JSON.stringify({
-      id: "1",
+    const result = await registerUser({
       name: formData.name,
       email: formData.email,
-      avatar: "/assets/team-members/Douglas-DeCosta.png"
-    }))
+      password: formData.password,
+    })
+    
+    if (result.success) {
+      router.push("/dashboard")
+    } else {
+      setError(result.error || "Registration failed")
+    }
     
     setIsLoading(false)
-    router.push("/dashboard")
   }
 
   return (
@@ -77,6 +80,12 @@ export default function RegisterPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4 p-6">
+            {error && (
+              <div className="rounded-lg bg-destructive/10 p-3 text-center text-sm text-destructive">
+                {error}
+              </div>
+            )}
+            
             {/* Name */}
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium text-foreground">

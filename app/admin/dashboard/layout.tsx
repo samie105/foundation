@@ -1,71 +1,58 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
-import { usePathname, useRouter } from "next/navigation"
 import {
   FavouriteIcon,
-  Home01Icon,
-  CreditCardIcon,
-  Clock01Icon,
+  UserMultiple02Icon,
   Settings01Icon,
   Logout01Icon,
+  CreditCardIcon,
   Menu01Icon,
   Cancel01Icon,
-  UserIcon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { getAdminSession, logoutAdmin } from "@/lib/actions/auth"
 import { cn } from "@/lib/utils"
-import { getUserSession, logoutUser } from "@/lib/actions/auth"
-
-type User = {
-  id: string
-  name: string
-  email: string
-  avatar?: string
-}
 
 const sidebarLinks = [
-  { name: "Overview", href: "/dashboard", icon: Home01Icon },
-  { name: "My Donations", href: "/dashboard/donations", icon: CreditCardIcon },
-  { name: "History", href: "/dashboard/history", icon: Clock01Icon },
-  { name: "Profile", href: "/dashboard/profile", icon: UserIcon },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings01Icon },
+  { name: "Users", href: "/admin/dashboard", icon: UserMultiple02Icon },
+  { name: "Payment Methods", href: "/admin/dashboard/payments", icon: CreditCardIcon },
+  { name: "Settings", href: "/admin/dashboard/settings", icon: Settings01Icon },
 ]
 
-export default function DashboardLayout({
+export default function AdminDashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const router = useRouter()
-  const pathname = usePathname()
+  const [admin, setAdmin] = useState<{ id: string; username: string } | null>(null)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [pathname, setPathname] = useState("")
 
   useEffect(() => {
-    const loadUser = async () => {
-      const session = await getUserSession()
-      if (session) {
-        setUser(session)
-      } else {
-        router.push("/auth/login")
+    const checkAuth = async () => {
+      const session = await getAdminSession()
+      if (!session) {
+        router.push("/admin/login")
+        return
       }
-      setIsLoading(false)
+      setAdmin(session)
     }
-    loadUser()
+    checkAuth()
+    setPathname(window.location.pathname)
   }, [router])
 
   const handleLogout = async () => {
-    await logoutUser()
-    router.push("/")
+    await logoutAdmin()
+    router.push("/admin/login")
   }
 
-  if (isLoading || !user) {
+  if (!admin) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
@@ -93,12 +80,12 @@ export default function DashboardLayout({
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="flex h-16 items-center justify-between border-b border-border px-4">
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/admin/dashboard" className="flex items-center gap-2">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                 <HugeiconsIcon icon={FavouriteIcon} className="h-5 w-5 text-primary-foreground" />
               </div>
               <span className="text-lg font-bold text-foreground">
-                Hope<span className="text-primary">Foundation</span>
+                Admin <span className="text-primary">Panel</span>
               </span>
             </Link>
             <Button
@@ -125,7 +112,10 @@ export default function DashboardLayout({
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
-                  onClick={() => setIsSidebarOpen(false)}
+                  onClick={() => {
+                    setIsSidebarOpen(false)
+                    setPathname(link.href)
+                  }}
                 >
                   <HugeiconsIcon icon={link.icon} className="h-5 w-5" />
                   {link.name}
@@ -134,26 +124,17 @@ export default function DashboardLayout({
             })}
           </nav>
 
-          {/* User Section */}
+          {/* Admin Section */}
           <div className="border-t border-border p-4">
             <div className="flex items-center gap-3">
-              <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-primary/10 ring-2 ring-border">
-                {user.avatar ? (
-                  <Image
-                    src={user.avatar}
-                    alt={user.name}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <span className="text-lg font-semibold text-primary">
-                    {user.name.charAt(0).toUpperCase()}
-                  </span>
-                )}
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                <span className="text-sm font-bold text-primary">
+                  {admin.username.charAt(0).toUpperCase()}
+                </span>
               </div>
               <div className="flex-1 overflow-hidden">
-                <p className="truncate text-sm font-medium text-foreground">{user.name}</p>
-                <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+                <p className="truncate text-sm font-medium text-foreground">{admin.username}</p>
+                <p className="truncate text-xs text-muted-foreground">Administrator</p>
               </div>
             </div>
             <Button
@@ -182,19 +163,12 @@ export default function DashboardLayout({
               <HugeiconsIcon icon={Menu01Icon} className="h-5 w-5" />
             </Button>
             <div>
-              <h1 className="text-lg font-semibold text-foreground">
-                {sidebarLinks.find((link) => link.href === pathname)?.name || "Dashboard"}
-              </h1>
-              <p className="text-xs text-muted-foreground">
-                Welcome back, {user.name.split(" ")[0]}!
-              </p>
+              <h1 className="text-lg font-semibold text-foreground">Admin Dashboard</h1>
+              <p className="text-xs text-muted-foreground">Manage users and payments</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <Link href="/donate">
-              <Button size="sm">Make a Donation</Button>
-            </Link>
           </div>
         </header>
 
